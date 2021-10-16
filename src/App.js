@@ -48,9 +48,10 @@ class App extends Component {
   onButtonSubmit =(event)=>{
   this.setState({imageUrl:this.state.input})
   //"a403429f2ddf4b49b307e318f00e528b"[Use this below incase of errors]
-  app.models.predict(Clarifai.COLOR_MODEL,this.state.input).then(
+  app.models.predict(Clarifai.FACE_DETECT_MODEL,this.state.input).then(
     function(response){
-      console.log(response)
+      console.log(response.outputs[0].data.regions[0].region_info.bounding_box)
+     // 
     },
     function(err){
 
