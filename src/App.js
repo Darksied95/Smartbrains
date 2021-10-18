@@ -7,7 +7,8 @@ import ImageLinkForm from './Components/ImageLinkForm/ImageLinkForm'
 import Rank from './Components/Rank/Rank';
 import Clarifai from 'clarifai';
 import FaceRecognition from './Components/FaceRecognition/FaceRecognition.js'
-
+import SignIn from './Components/SignIn/SignIn'
+import Register from './Components/Register/Register'
 
 
 const app= new Clarifai.App({
@@ -37,7 +38,8 @@ class App extends Component {
     this.state={
       input:'',
       imageUrl:'',
-      box:{}
+      box:{},
+      route:'signin'//Keep tracks on where we are on the page
     }
   }
 
@@ -46,13 +48,6 @@ class App extends Component {
    const image =document.getElementById('inputimage');
    const width=Number(image.width);
    const height=Number(image.height);
-   console.log(clarifaiFace);
-   console.log(clarifaiFace.left_col *width);
-   console.log(clarifaiFace.top_row *width);
-   console.log(width -(clarifaiFace.right_col*width));
-   console.log(height -(clarifaiFace.bottom_row *height));
-   console.log(height);
-   console.log(clarifaiFace.bottom_row *height) ;
    return{
      leftCol:clarifaiFace.left_col * width,
      topRow:clarifaiFace.top_row*height,
@@ -74,6 +69,7 @@ class App extends Component {
   onButtonSubmit =(event)=>{
   this.setState({imageUrl:this.state.input})
 
+  
 
   //"a403429f2ddf4b49b307e318f00e528b"[Use this below incase of errors]
   app.models
@@ -85,19 +81,27 @@ class App extends Component {
 
 };
 
+onRouteChange=(route)=>{
+  this.setState({route:route});
+};
+
   render(){
   return (
     <div className="App">
       <Particles className='particles'
             params={particlesOptions}   />
-      <Navigation />
-      <Logo />
+      <Navigation onRouteChange={this.onRouteChange}/>
+      {this.state.route==='signin'
+      ?<SignIn onRouteChange={this.onRouteChange}/>
+      :<div><Logo />
       <Rank />
       <ImageLinkForm 
       onInputChange={this.onInputChange} 
       onButtonSubmit={this.onButtonSubmit}/>
       <FaceRecognition box={this.state.box} imageUrl={this.state.imageUrl}/>
-    </div>
+      </div>
+      }
+      </div>
   );
 
 }
